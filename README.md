@@ -30,7 +30,13 @@ Ansible, Chef, or Puppet
 ## Solution
 ### Create AWS EC2 Instance
 https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
-
+1. Create AWS Account
+2. Create key pair
+3. Create security group
+4. Launch instance
+  a. use security group and key pair created above
+5. Connect to EC2 instance
+ 
 ### Set Up Jenkins Server on AWS EC2 Instance
 
 ### Create GitHub Repository with Application
