@@ -33,12 +33,24 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 1. Create AWS Account
 2. Create key pair
 3. Create security group
+  - ensure port 22 is open to allow ssh
 4. Launch instance
-  a. use security group and key pair created above
+  - use security group and key pair created above
 5. Connect to EC2 instance
  
 ### Set Up Jenkins Server on AWS EC2 Instance
-
+1. Download and install Jenkins 
+  - sudo yum update -y
+  - sudo wget -O /etc/yum.repos.d/jenkins.repo \
+    https://pkg.jenkins.io/redhat-stable/jenkins.repo
+  - sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+  - sudo yum install jenkins java-1.8.0-openjdk-devel -y
+  - sudo systemctl daemon-reload
+  - sudo systemctl start jenkins
+  - sudo systemctl status jenkins
+2.Navigate to the jenkins interface running on EC2
+  - http://<your_server_public_DNS>:8080 (note, only http is used)
+  - sign in using initial admin password -- sudo cat /var/lib/jenkins/secrets/initialAdminPassword 
 ### Create GitHub Repository with Application
 
 ### Create Ansible Playbook
