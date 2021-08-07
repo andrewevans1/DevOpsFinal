@@ -29,6 +29,7 @@ Ansible, Chef, or Puppet
 
 ## Solution
 ### Create AWS EC2 Instance
+https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 
 ### Set Up Jenkins Server on AWS EC2 Instance
 
