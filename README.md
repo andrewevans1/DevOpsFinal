@@ -28,3 +28,17 @@ Ansible, Chef, or Puppet
 
 
 ## Solution
+### Create AWS EC2 Instance
+
+### Set Up Jenkins Server on AWS EC2 Instance
+
+### Create GitHub Repository with Application
+
+### Create Ansible Playbook
+
+### Create Build Pipeline 
+- Build on SCM trigger
+- save build products
+- Run ansible playbook to create docker image with build product
+
+### Remove Containers
