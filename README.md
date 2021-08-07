@@ -48,10 +48,20 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   - sudo systemctl daemon-reload
   - sudo systemctl start jenkins
   - sudo systemctl status jenkins
-2.Navigate to the jenkins interface running on EC2
+
+2. Navigate to the jenkins interface running on EC2
   - http://<your_server_public_DNS>:8080 (note, only http is used)
   - sign in using initial admin password -- sudo cat /var/lib/jenkins/secrets/initialAdminPassword 
-### Create GitHub Repository with Application
+
+3. Install suggested plugins
+4. Install the "Amazon EC2" plugin
+
+### Create Git Repository with Application
+1. From GitHub, create a new repository
+2. Clone empty repository to local working directory
+3. Download a sample java app from start.spring.io
+4. Place project files in the git repository directory
+5. Push changes to remote repository
 
 ### Create Ansible Playbook
 
