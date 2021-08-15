@@ -32,11 +32,13 @@ Ansible, Chef, or Puppet
 https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 1. Create AWS Account
 2. Create key pair
+  - Download and place in working directory
 3. Create security group
   - ensure port 22 is open to allow ssh
 4. Launch instance
   - use security group and key pair created above
 5. Connect to EC2 instance
+  - ssh -i <keypem> ec2-user@<ec2 ip address> 
  
 ### Set Up Jenkins Server on AWS EC2 Instance
 1. Download and install Jenkins 
@@ -55,6 +57,18 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 
 3. Install suggested plugins
 4. Install the "Amazon EC2" plugin
+  
+### Provide AWS Credentials to Jenkins
+1. Sign in to the AWS Management Console and navigate to IAM.
+2. Select Users from side navigation and choose Add user.
+3. Enter the User name as Jenkins and grant Programmatic access to this user.
+4. On the next page, select Attach existing policies directly and choose Create Policy.
+5. Select the JSON tab and add the policy at AWSJenkins.json. Replace <YOUR_ACCOUNT_ID> with your AWS account ID:
+
+  
+  1. Navigate back to the Jenkins dashboard, then select Configure a Cloud.
+  - Add a new cloud > Amazon EC2
+  - 
 
 ### Create Git Repository with Application
 1. From GitHub, create a new repository
