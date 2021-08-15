@@ -60,6 +60,12 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 1. From GitHub, create a new repository
 2. Clone empty repository to local working directory
 3. Download a sample java app from start.spring.io
+  - Maven Project
+  - Java
+  - 2.5.3
+  - War
+  - Java 11
+  - Add Depenedencies > Spring Web
 4. Place project files in the git repository directory
 5. Push changes to remote repository
 
