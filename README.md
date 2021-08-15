@@ -64,12 +64,18 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 3. Enter the User name as Jenkins and grant Programmatic access to this user.
 4. On the next page, select Attach existing policies directly and choose Create Policy.
 5. Select the JSON tab and add the policy at AWSJenkins.json. Replace <YOUR_ACCOUNT_ID> with your AWS account ID:
-
-  
-  1. Navigate back to the Jenkins dashboard, then select Configure a Cloud.
+6. Choose Review Policy and add a policy name on the next page.
+7. Choose Create Policy button.
+8. Return to the previous tab to continue creating the IAM user. Choose Refresh and search for the policy name you created. Select the policy.
+9. Choose Next Tags and then Review.
+10. Choose Create user and save the Access key ID and Secret access key.
+11. Create a key pair for Jenkins
+12. Navigate back to the Jenkins dashboard, then select Configure a Cloud.
   - Add a new cloud > Amazon EC2
-  - 
-
+  - Add a new AWS Credential in the Amazon EC Credentials field, use the access key ID and secret access key from 10
+  - Add a new SSH Username with private key credential in the EC2 Key Pair's Private Key, use the key from 11
+13. Save
+  
 ### Create Git Repository with Application
 1. From GitHub, create a new repository
 2. Clone empty repository to local working directory
