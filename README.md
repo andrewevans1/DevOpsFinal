@@ -39,7 +39,9 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   - use security group and key pair created above
 5. Connect to EC2 instance
   - ssh -i <keypem> ec2-user@<ec2 ip address> 
- 
+6. Download and install git
+  - sudo yum update -y
+  - sudo yum install git -y
 ### Set Up Jenkins Server on AWS EC2 Instance
 1. Download and install Jenkins 
   - sudo yum update -y
@@ -57,6 +59,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 
 3. Install suggested plugins
 4. Install the "Amazon EC2" plugin
+5. Install the "Build Pipeline" plugin
   
 ### Provide AWS Credentials to Jenkins
 1. Sign in to the AWS Management Console and navigate to IAM.
@@ -64,27 +67,78 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 3. Enter the User name as Jenkins and grant Programmatic access to this user.
 4. On the next page, select Attach existing policies directly and choose Create Policy.
 5. Select the JSON tab and add the policy at AWSJenkins.json. Replace <YOUR_ACCOUNT_ID> with your AWS account ID:
-
-  
-  1. Navigate back to the Jenkins dashboard, then select Configure a Cloud.
+6. Choose Review Policy and add a policy name on the next page.
+7. Choose Create Policy button.
+8. Return to the previous tab to continue creating the IAM user. Choose Refresh and search for the policy name you created. Select the policy.
+9. Choose Next Tags and then Review.
+10. Choose Create user and save the Access key ID and Secret access key.
+11. Create a key pair for Jenkins
+12. Navigate back to the Jenkins dashboard, then select Configure a Cloud.
   - Add a new cloud > Amazon EC2
-  - 
-
+  - Add a new AWS Credential in the Amazon EC Credentials field, use the access key ID and secret access key from 10
+  - Add a new SSH Username with private key credential in the EC2 Key Pair's Private Key, use the key from 11
+13. Save
+  
 ### Create Git Repository with Application
 1. From GitHub, create a new repository
 2. Clone empty repository to local working directory
 3. Download a sample java app from start.spring.io
   - Maven Project
   - Java
-  - 2.5.3
+  - 2.5.4
   - War
-  - Java 11
+  - Java 8
   - Add Depenedencies > Spring Web
 4. Place project files in the git repository directory
 5. Push changes to remote repository
 
-### Create Ansible Playbook
+### Create Ansible Playbook to Provision Webserver Containers
 
+  
+
+### Create Jenkins Build Job
+1. From the Jenkins dashboard, select New Item > Freestyle Project. Name the project "Build"
+2. Under Source Code Management, select Git. Paste the link to your github repo in the Repository URL field.
+3. Under Build Triggers, select Poll SCM. Enter "0 0 * * *" to check every night for new commits to trigger a build.
+4. Under Build Environment, select Delete workspace before build starts
+5. Under Build, select Add build step > Execute Shell. Enter "cd demo; mvn spring-boot:build-image" in the Command field.
+6. Under Post-build Actions select Add post-build action > Archive the artifacts.
+7. Enter "demo/target/*.war" in the Files to archive field.
+8. Under Post-build Actions select Add post-build action > Build other projects.
+9. Enter Test in the Projects to build field, and select Trigger only if build is stable.
+
+### Create Jenkins Test Job
+1. From the Jenkins dashboard, select New Item > Freestyle Project. Name the project "Test"
+2. Under Source Code Management, select Git. Paste the link to your github repo in the Repository URL field.
+3. Under Build, select Add build step > Execute shell. Enter "mvn test" as the Command.
+4. Under Post-build Actions select Add post-build action > Build other projects.
+5. Enter Deploy in the Projects to build field, and select Trigger only if build is stable.
+6. Under Post-build Actions select Add post-build action > Publish Junit test result report.
+7. Enter "target/surefire-reports/*.xml" in the Test report XMLs field.
+8. Save.
+  
+### Create Jenkins Deploy Job
+1. From the Jenkins dashboard, select New Item > Freestyle Project. Name the project "Deploy"
+2. Under Build Environment, select "Delete workspace before build starts"
+3. Under Build, select Add build step > Copy artifacts from another project. Set the following
+  - Project name: CICD-Project1-Build
+  - Which build: Latest successful build
+  - Artifacts to copy: **/*.war
+4. Under Build, select Add build step > AWS Elastic Beanstalk. Set the following
+  - AWS Credentials and Region
+    - Credentials: copied from above
+    - AWS Region: copied from above
+  - Application and Environment
+    - Application Name: DevOpsCICDProject
+    - Devopscicdproject-env
+  - Packaging
+    - Root Object: target (it will zip the contents of the target folder copied into the current workspace)
+  - Uploading 
+    - S3 Bucket Name: 
+    - S3 key prefix:
+  - Versioning
+    - Version Label Format: ${BUILD_NUMBER}
+  
 ### Create Build Pipeline 
 - Build on SCM trigger
 - save build products
