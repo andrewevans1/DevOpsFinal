@@ -42,6 +42,14 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 6. Download and install git
   - sudo yum update -y
   - sudo yum install git -y
+7. Download and install Maven
+  - wget <copy link to tar from https://maven.apache.org/download.cgi>
+  - tar -xvcf <tar> /opt/maven
+8. Download and install Docker
+  - sudo amazon-linux-extras install docker
+  - sudo service docker start
+  - sudo usermod -a -G docker ec2-user
+  
 ### Set Up Jenkins Server on AWS EC2 Instance
 1. Download and install Jenkins 
   - sudo yum update -y
@@ -53,13 +61,16 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   - sudo systemctl start jenkins
   - sudo systemctl status jenkins
 
-2. Navigate to the jenkins interface running on EC2
+2. Add jenkins user to Docker
+  - sudo usermod -a -G docker jenkins
+  
+3. Navigate to the jenkins interface running on EC2
   - http://<your_server_public_DNS>:8080 (note, only http is used)
   - sign in using initial admin password -- sudo cat /var/lib/jenkins/secrets/initialAdminPassword 
 
-3. Install suggested plugins
-4. Install the "Amazon EC2" plugin
-5. Install the "Build Pipeline" plugin
+4. Install suggested plugins
+5. Install the "Amazon EC2" plugin
+6. Install the "Build Pipeline" plugin
   
 ### Provide AWS Credentials to Jenkins
 1. Sign in to the AWS Management Console and navigate to IAM.
@@ -101,7 +112,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 2. Under Source Code Management, select Git. Paste the link to your github repo in the Repository URL field.
 3. Under Build Triggers, select Poll SCM. Enter "0 0 * * *" to check every night for new commits to trigger a build.
 4. Under Build Environment, select Delete workspace before build starts
-5. Under Build, select Add build step > Execute Shell. Enter "cd demo; mvn spring-boot:build-image" in the Command field.
+5. Under Build, select Add build step > Execute Shell. Enter "export PATH=$PATH:/opt/maven/apache-maven-x.x.x:/opt/maven/apache-maven-x.x.x/bin; cd demo; mvn spring-boot:build-image" in the Command field.
 6. Under Post-build Actions select Add post-build action > Archive the artifacts.
 7. Enter "demo/target/*.war" in the Files to archive field.
 8. Under Post-build Actions select Add post-build action > Build other projects.
