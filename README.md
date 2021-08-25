@@ -210,7 +210,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 2. Under Build, select Add build step > Execute Shell. Enter 
   ```
   docker ps
-  docker stop spring-app
+  docker stop $(docker ps -a -q)
   docker ps
   ```
   in the Command field.
