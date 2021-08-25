@@ -162,7 +162,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   ```
   in the Command field.
 6. Under Post-build Actions select Add post-build action > Archive the artifacts.
-7. Enter "demo/target/*.jar, Dockerfile" in the Files to archive field.
+7. Enter "demo/target/*.jar, Dockerfile, webServerDocker.yaml" in the Files to archive field.
 8. Under Post-build Actions select Add post-build action > Build other projects.
 9. Enter "Test" in the Projects to build field, and select Trigger only if build is stable.
 
@@ -194,7 +194,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 4. Under Build, select Add build step > Execute Shell. Enter 
   ```
   docker build -t spring-app .
-  docker run -dp 8080:80 spring-app
+  ansible-playbook webServerDocker.yaml 
   docker ps
   ```
   in the Command field.
