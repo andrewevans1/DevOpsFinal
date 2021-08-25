@@ -100,7 +100,7 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   - 2.5.4
   - War
   - Java 8
-  - Add Depenedencies > Spring Web
+  - Add Depenedencies > Spring Web, Thymeleaf
 4. Place project files in the git repository directory
 5. Push changes to remote repository
 
