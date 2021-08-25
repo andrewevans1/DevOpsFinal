@@ -105,8 +105,48 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 5. Push changes to remote repository
 
 ### Create Ansible Playbook to Provision Webserver Containers
+1. In the working directory, create a new file called webServerDocker.yaml and insert the following:
+```
+---
+- hosts: webservers
+  become: true
 
-  
+  tasks:
+    - name: Install aptitude using apt
+      apt: name=aptitude state=latest update_cache=yes force_apt_get=yes
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu xenial stable
+        state: present
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Pull Docker image
+      docker_image:
+        name: "spring-app"
+        source: pull
+
+    - name: Create container
+      docker_container:
+        name: "spring-app container"
+        image: "spring-app"
+        state: present
+```  
 
 ### Create Jenkins Build Job
 1. From the Jenkins dashboard, select New Item > Freestyle Project. Name the project "Build"
@@ -153,10 +193,9 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
   - Artifacts to copy: **/*.jar
 4. Under Build, select Add build step > Execute Shell. Enter 
   ```
-  export PATH=$PATH:/opt/maven/apache-maven-x.x.x:/opt/maven/apache-maven-x.x.x/bin;
-  cd demo;
-  mvn --version
-  mvn test
+  docker build -t spring-app .
+  docker run -dp 8080:80 spring-app
+  docker ps
   ```
   in the Command field.
   
@@ -166,4 +205,12 @@ https://www.jenkins.io/doc/tutorials/tutorial-for-installing-jenkins-on-AWS/
 3. Under Pipeline Flow > Upstream/downstream config, set "Build" as the Initial Job.
 4. Click OK. Pipeline View should be displayed.
   
-### Remove Containers
+### Remove Containers - Create Jenkins Clean Up Job
+1. From the Jenkins dashboard, select New Item > Freestyle Project. Name the project "Clean Up"
+2. Under Build, select Add build step > Execute Shell. Enter 
+  ```
+  docker ps
+  docker stop spring-app
+  docker ps
+  ```
+  in the Command field.
